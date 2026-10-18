@@ -1,43 +1,23 @@
-# EV Route Pro — iPhone Safari prototype
+# EV Route Pro v3 — iPhone Safari 웹앱
 
-## 실행
+## 주요 기능
+- GPS 위치·정확도·속도 표시 (GPS 속도 미제공 시 위치 변화 기반 추정, 정지 상태에서는 `--` 또는 0이 정상일 수 있음)
+- Leaflet 지도 타일 로딩 시 지도 크기 재계산 (`invalidateSize`) 및 재표시
+- OpenStreetMap Nominatim 목적지 검색 (한국 검색 제한)
+- 공개 OSRM 데모 서버의 **도로 경로 미리보기**와 주요 회전 지점 목록 (한국 도로 커버리지·서비스 안정성 보장 불가)
+- OpenStreetMap Overpass 충전소 조회 (실시간 가용성 아님)
+- 수동 배터리 및 주행 거리 기반 단순 도착 잔량 추정
+- **Tesla 연동 서버 인터페이스** (실차 인증 자체는 미구현)
 
-**추천: GitHub Pages (무료 HTTPS 호스팅)**
-1. iPhone Safari에서 github.com에 로그인하고 새 Public 저장소 `ev-route-pro`를 만듭니다.
-2. `index.html`, `app.js`, `manifest.webmanifest` 세 파일을 저장소 루트에 업로드합니다. iPhone에서 ZIP을 파일 앱으로 압축 해제하고 GitHub 웹사이트의 `Add file → Upload files`로 올릴 수 있습니다. 모바일 웹 UI가 불편하면 Safari의 '데스크탑 웹 사이트 요청'을 사용하세요.
-3. 저장소 Settings → Pages → Build and deployment → Deploy from a branch → `main` / `(root)` → Save.
-4. 몇 분 후 `https://사용자명.github.io/ev-route-pro/`에서 엽니다. Safari 공유 → 홈 화면에 추가.
-5. `내 위치 찾기` 버튼을 누르고 위치 권한을 허용합니다. HTTPS가 필요합니다.
+## 아이폰에서 설치 없이 배포
+기존 GitHub Pages 저장소의 루트에 `index.html`, `app.js`, `manifest.webmanifest`를 업로드해 기존 파일을 덮어쓴 뒤, `https://660two-creator.github.io/ev-route-pro/?v=3`에서 확인하세요. 캐시가 남으면 Safari에서 새로고침하세요.
 
-**주의:** iPhone 파일 앱에서 HTML을 직접 열면 외부 지도와 위치 권한이 제대로 동작하지 않을 수 있으므로 HTTPS 호스팅을 사용하세요.
+## Tesla 실차 연동의 한계와 보안
+Tesla Fleet API는 공식 개발자 등록, OAuth 2.0 인증 및 토큰 보관·갱신을 위한 보안 백엔드가 필요합니다. 이 ZIP은 Tesla API OAuth 연결이나 실제 차량 읽기를 완성했다고 주장하지 않습니다. 웹앱의 '개인용 Tesla 연동 서버 URL'은 별도로 구축한 **본인 전용 HTTPS API**가 `{"battery_level": 76}` JSON을 반환하고 해당 웹앱 origin에 대해 CORS를 허용할 때만 동작합니다. 인증 없는 공개 배터리 API는 개인정보를 노출할 수 있으므로 만들지 마세요. GitHub Pages나 JS에 Tesla 비밀번호·OAuth 토큰·클라이언트 시크릿을 저장하지 마세요.
 
-## 제공 기능
-- GPS 기반 속도(브라우저가 speed 값을 제공할 때만), 현재 위치
-- Leaflet/OpenStreetMap 지도, 지도 터치 및 장소명 검색(Nominatim)
-- 직선거리 및 수동 입력 배터리·전비 기반 도착 잔량 추정
-- Overpass API 기반 반경 5km OpenStreetMap 충전소 목록
-- 모바일 다크 UI 및 홈 화면 웹앱 manifest
-
-## 제한
-- **실제 도로 경로, 음성 안내, 교통정보 없음.** 지도 위 점선은 직선 연결입니다.
-- **테슬라 실차 연동 없음.** 배터리 수동 입력입니다.
-- **CarPlay 실행 불가.** Safari 웹앱은 정식 CarPlay 내비게이션 앱이 아닙니다.
-- 공개 Nominatim/Overpass API는 속도 제한, 장애, 사용 정책이 있으므로 개인 시제품 테스트에만 사용하세요. 대규모 공개 서비스는 자체 서버나 상용 API 필요.
-- 배터리 예측은 단순 계산이며 도로 길이, 온도, 고도, 회생제동, HVAC 등을 반영하지 않습니다. 실제 충전 판단에 사용하지 마세요.
-- GPS 속도는 기기·브라우저·권한에 따라 null일 수 있습니다. 주행 중 휴대폰 조작 금지.
-- 지도는 온라인 연결 필요. 서비스별 이용약관 및 저작자 표시 준수.
-
-## 구조
-- `index.html`: 화면 및 스타일
-- `app.js`: 위치, 지도, 목적지, 충전소, 배터리 계산
-- `manifest.webmanifest`: 홈 화면 웹앱 설정
-
-Tesla/CarPlay 정식 연동은 향후 별도 네이티브 iOS 앱과 애플의 CarPlay navigation entitlement가 필요합니다.
-
-
-## GPS 수정 버전
-- 화면 상단 **GPS 연결 / 재시도** 버튼으로 명시적 위치 요청
-- 권한 거부(1), 위치 확인 실패(2), 시간 초과(3) 한글 오류 안내
-- GPS 정확도, 현재 위치 지도 이동, 추적 중지
-- GitHub Pages 저장소 최상위의 `index.html` 및 `app.js`를 새 파일로 교체하세요.
-- 실제 iPhone Safari에서의 GPS 수신은 기기에서 직접 확인해야 합니다.
+## 기타 제한
+- 이 프로젝트는 Safari 웹앱이며 Apple CarPlay 앱이 아닙니다. CarPlay 내비게이션은 Apple의 권한 승인과 네이티브 iOS 앱 개발이 별도로 필요합니다.
+- OSRM 공개 서버는 개발/데모용이며 트래픽, 지역 데이터, 약관, 응답 속도 제한이 있을 수 있습니다. 실서비스에는 적합한 상용/자체 경로 서버가 필요합니다.
+- 턴바이턴 목록은 미리보기이며 실시간 주행 유도·교통·차선 안내·음성 안내를 제공하지 않습니다.
+- 예상 도착 배터리는 배터리 용량·평균 전비를 사용한 근사치로, 기온·고도·속도·실시간 전비·충전 정차를 반영하지 않습니다.
+- 주행 중에는 휴대폰을 조작하지 마세요.
