@@ -33,3 +33,11 @@
 - `manifest.webmanifest`: 홈 화면 웹앱 설정
 
 Tesla/CarPlay 정식 연동은 향후 별도 네이티브 iOS 앱과 애플의 CarPlay navigation entitlement가 필요합니다.
+
+
+## GPS 수정 버전
+- 화면 상단 **GPS 연결 / 재시도** 버튼으로 명시적 위치 요청
+- 권한 거부(1), 위치 확인 실패(2), 시간 초과(3) 한글 오류 안내
+- GPS 정확도, 현재 위치 지도 이동, 추적 중지
+- GitHub Pages 저장소 최상위의 `index.html` 및 `app.js`를 새 파일로 교체하세요.
+- 실제 iPhone Safari에서의 GPS 수신은 기기에서 직접 확인해야 합니다.
